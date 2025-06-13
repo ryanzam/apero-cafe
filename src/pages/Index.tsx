@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { QrCode, ShoppingCart, Star, TrendingUp, Users } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { getFeedbacks, getOrders } from '../utils/data';
+import QRCodeGenerator from '../components/QRCodeGenerator';
 
 const Index = () => {
 
@@ -134,7 +135,7 @@ const Index = () => {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-
+                                <QRCodeGenerator />
                             </CardContent>
                         </Card>
                     </TabsContent>
