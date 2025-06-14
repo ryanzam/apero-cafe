@@ -32,7 +32,6 @@ const Menu = () => {
     const tlang = translations[language]
 
     const addToCart = (item: any) => {
-        console.log(item)
         const existingItem = cart.find(cartItem => cartItem.id === item.id);
         if (existingItem) {
             setCart(cart.map(cartItem =>

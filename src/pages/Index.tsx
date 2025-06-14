@@ -5,6 +5,7 @@ import { QrCode, ShoppingCart, Star, TrendingUp, Users } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { getFeedbacks, getOrders } from '../utils/data';
 import QRCodeGenerator from '../components/QRCodeGenerator';
+import OrderTab from '../components/OrderTab';
 
 const Index = () => {
 
@@ -139,6 +140,11 @@ const Index = () => {
                             </CardContent>
                         </Card>
                     </TabsContent>
+
+                    <TabsContent value="orders" className="space-y-6">
+                        <OrderTab orders={orders} onRefresh={handleRefresh} />
+                    </TabsContent>
+                    
                 </Tabs>
             </div>
         </div>
