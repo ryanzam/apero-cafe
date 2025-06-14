@@ -25,8 +25,9 @@ const CartDrawer = ({
 
     const tlang = translations[language]
     console.log({ cart, tlang })
+    
     return (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-50" onClick={onClose}>
+        <div className="fixed inset-0 z-50 bg-black/80 bg-opacity-50" onClick={onClose}>
             <div
                 className="fixed right-0 top-0 h-full w-full max-w-md bg-white shadow-xl"
                 onClick={(e) => e.stopPropagation()}
@@ -100,7 +101,7 @@ const CartDrawer = ({
                             </div>
                             <Button
                                 onClick={onCheckout}
-                                className="w-full bg-orange-600 hover:bg-orange-700"
+                                className="w-full bg-neutral-600 hover:bg-neutral-900"
                             >
                                 {tlang.checkout}
                             </Button>

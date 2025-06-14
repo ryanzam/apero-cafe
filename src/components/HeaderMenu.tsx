@@ -1,7 +1,8 @@
 import { Button } from './ui/button'
-import { Badge, Languages, ShoppingCart } from 'lucide-react'
+import { Languages, ShoppingCart } from 'lucide-react'
 import { translations } from '../utils/translations';
 import type { Language } from '../pages/Menu';
+import { Badge } from './ui/badge';
 
 interface HeaderMenuProps {
     language: Language;
@@ -44,7 +45,7 @@ const HeaderMenu = ({ language, onLanguageChange, cartCount, onCartClick }: Head
                         >
                             <ShoppingCart className="h-4 w-4" />
                             {cartCount > 0 && (
-                                <Badge className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
+                                <Badge className="absolute -top-2 -right-2 bg-neutral-600 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
                                     {cartCount}
                                 </Badge>
                             )}

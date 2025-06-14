@@ -2,11 +2,12 @@ import React, { useState } from 'react'
 import HeaderMenu from '../components/HeaderMenu';
 import { menuItems } from '../utils/data';
 import { Card, CardContent } from '../components/ui/card';
-import { Badge, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { translations } from '../utils/translations';
 import CartDrawer from '../components/CartDrawer';
 import { toast } from 'sonner';
+import { Badge } from '../components/ui/badge';
 
 export type Language = 'en' | 'ne';
 
@@ -62,7 +63,7 @@ const Menu = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50">
+        <div className="min-h-screen">
             <HeaderMenu
                 language={language}
                 onLanguageChange={setLanguage}
@@ -91,7 +92,7 @@ const Menu = () => {
                                             alt={item.name[language]}
                                             className="w-full h-48 object-cover"
                                         />
-                                        <Badge className="absolute top-2 right-2 bg-green-600">
+                                        <Badge className="absolute top-2 right-2 bg-neutral-800">
                                             NPR {item.price}
                                         </Badge>
                                     </div>
@@ -104,7 +105,7 @@ const Menu = () => {
                                         </p>
                                         <Button
                                             onClick={() => addToCart(item)}
-                                            className="w-full bg-orange-600 hover:bg-orange-700"
+                                            className="w-full bg-neutral-600 hover:bg-neutral-900"
                                         >
                                             <Plus className="h-4 w-4 mr-2" />
                                             {tlang.addToCart}
@@ -127,7 +128,7 @@ const Menu = () => {
                                             alt={item.name[language]}
                                             className="w-full h-48 object-cover"
                                         />
-                                        <Badge className="absolute top-2 right-2 bg-green-600">
+                                        <Badge className="absolute top-2 right-2 bg-neutral-800">
                                             NPR {item.price}
                                         </Badge>
                                     </div>
@@ -140,7 +141,7 @@ const Menu = () => {
                                         </p>
                                         <Button
                                             onClick={() => addToCart(item)}
-                                            className="w-full bg-orange-600 hover:bg-orange-700"
+                                            className="w-full bg-neutral-600 hover:bg-neutral-900"
                                         >
                                             <Plus className="h-4 w-4 mr-2" />
                                             {tlang.addToCart}
