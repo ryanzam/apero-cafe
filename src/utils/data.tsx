@@ -60,3 +60,13 @@ export const getFeedbacks = () => {
         return [];
     }
 };
+
+export const saveOrder = (order: any) => {
+    try {
+        const orders = getOrders();
+        orders.unshift(order); // Add to beginning
+        localStorage.setItem('restaurant_orders', JSON.stringify(orders));
+    } catch (error) {
+        console.error('Error saving order:', error);
+    }
+};

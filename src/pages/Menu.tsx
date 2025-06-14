@@ -8,6 +8,7 @@ import { translations } from '../utils/translations';
 import CartDrawer from '../components/CartDrawer';
 import { toast } from 'sonner';
 import { Badge } from '../components/ui/badge';
+import OrderForm from '../components/OrderForm';
 
 export type Language = 'en' | 'ne';
 
@@ -25,7 +26,7 @@ const Menu = () => {
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [showOrderForm, setShowOrderForm] = useState(false);
     const [showFeedback, setShowFeedback] = useState(false);
-    const [lastOrderId, setLastOrderId] = useState(null);
+    const [lastOrderId, setLastOrderId] = useState<number | null>(null);
 
     const tlang = translations[language]
 
@@ -61,6 +62,16 @@ const Menu = () => {
     const getTotalItems = () => {
         return cart.reduce((total, item) => total + item.quantity, 0);
     };
+
+    const handleOrderComplete = (orderId: number) => {
+        setLastOrderId(orderId);
+        setCart([]);
+        setShowOrderForm(false);
+        setIsCartOpen(false);
+        setShowFeedback(true);
+        toast.success(tlang.orderPlaced);
+    };
+
 
     return (
         <div className="min-h-screen">
@@ -167,6 +178,16 @@ const Menu = () => {
                         setShowOrderForm(true);
                     }}
                 />}
+
+            {showOrderForm && (
+                <OrderForm
+                    cart={cart}
+                    totalPrice={getTotalPrice()}
+                    language={language}
+                    onComplete={() => handleOrderComplete}
+                    onCancel={() => setShowOrderForm(false)}
+                />
+            )}
 
         </div>
     )
