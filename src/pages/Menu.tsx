@@ -9,6 +9,7 @@ import CartDrawer from '../components/CartDrawer';
 import { toast } from 'sonner';
 import { Badge } from '../components/ui/badge';
 import OrderForm from '../components/OrderForm';
+import FeedbackForm from '../components/FeedbackForm';
 
 export type Language = 'en' | 'ne';
 
@@ -26,7 +27,7 @@ const Menu = () => {
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [showOrderForm, setShowOrderForm] = useState(false);
     const [showFeedback, setShowFeedback] = useState(false);
-    const [lastOrderId, setLastOrderId] = useState<number | null>(null);
+    const [lastOrderId, setLastOrderId] = useState<string | null>(null);
 
     const tlang = translations[language]
 
@@ -63,7 +64,7 @@ const Menu = () => {
         return cart.reduce((total, item) => total + item.quantity, 0);
     };
 
-    const handleOrderComplete = (orderId: number) => {
+    const handleOrderComplete = (orderId: string) => {
         setLastOrderId(orderId);
         setCart([]);
         setShowOrderForm(false);
@@ -72,6 +73,11 @@ const Menu = () => {
         toast.success(tlang.orderPlaced);
     };
 
+    const handleFeedbackComplete = () => {
+        setShowFeedback(false);
+        setLastOrderId(null);
+        toast.success(tlang.feedbackSubmitted);
+    };
 
     return (
         <div className="min-h-screen">
@@ -184,8 +190,17 @@ const Menu = () => {
                     cart={cart}
                     totalPrice={getTotalPrice()}
                     language={language}
-                    onComplete={() => handleOrderComplete}
+                    onComplete={handleOrderComplete}
                     onCancel={() => setShowOrderForm(false)}
+                />
+            )}
+
+            {showFeedback && (
+                <FeedbackForm
+                    orderId={lastOrderId}
+                    language={language}
+                    onComplete={() => handleFeedbackComplete()}
+                    onSkip={handleFeedbackComplete}
                 />
             )}
 
