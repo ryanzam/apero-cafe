@@ -29,6 +29,7 @@ const Menu = () => {
     const tlang = translations[language]
 
     const addToCart = (item: any) => {
+        console.log(item)
         const existingItem = cart.find(cartItem => cartItem.id === item.id);
         if (existingItem) {
             setCart(cart.map(cartItem =>
@@ -102,7 +103,7 @@ const Menu = () => {
                                             {item.description[language]}
                                         </p>
                                         <Button
-                                            onClick={(item) => addToCart(item)}
+                                            onClick={() => addToCart(item)}
                                             className="w-full bg-orange-600 hover:bg-orange-700"
                                         >
                                             <Plus className="h-4 w-4 mr-2" />
@@ -153,7 +154,18 @@ const Menu = () => {
             </div>
 
             {/* Cart Drawer */}
-
+            {isCartOpen &&
+                <CartDrawer
+                    onClose={() => setIsCartOpen(false)}
+                    cart={cart}
+                    updateQuantity={updateQuantity}
+                    totalPrice={getTotalPrice()}
+                    language={language}
+                    onCheckout={() => {
+                        setIsCartOpen(false);
+                        setShowOrderForm(true);
+                    }}
+                />}
 
         </div>
     )

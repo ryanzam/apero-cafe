@@ -6,7 +6,6 @@ import { translations } from '../utils/translations';
 import type { Language } from '../pages/Menu';
 
 interface CartDrawerProps {
-    isOpen: boolean;
     onClose: () => void;
     cart: any[];
     updateQuantity: (id: number, quantity: number) => void;
@@ -16,7 +15,6 @@ interface CartDrawerProps {
 }
 
 const CartDrawer = ({
-    isOpen,
     onClose,
     cart,
     updateQuantity,
@@ -26,7 +24,7 @@ const CartDrawer = ({
 }: CartDrawerProps) => {
 
     const tlang = translations[language]
-
+    console.log({ cart, tlang })
     return (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50" onClick={onClose}>
             <div
@@ -51,9 +49,16 @@ const CartDrawer = ({
                         ) : (
                             <div className="space-y-4">
                                 {cart.map((item) => (
-                                    <Card key={item.id}>
-                                        <CardContent className="p-4">
+                                    <Card key={item.id} className='py-3'>
+                                        <CardContent>
                                             <div className="flex items-center justify-between">
+                                                <div>
+                                                    <img
+                                                        src={item.image}
+                                                        alt={item.name[language]}
+                                                        className="w-20 h-20 object-cover"
+                                                    />
+                                                </div>
                                                 <div className="flex-1">
                                                     <h3 className="font-medium">{item.name[language]}</h3>
                                                     <p className="text-sm text-gray-600">NPR {item.price}</p>
