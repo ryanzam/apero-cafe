@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 import { getFeedbacks, getOrders } from '../utils/data';
 import QRCodeGenerator from '../components/QRCodeGenerator';
 import OrderTab from '../components/OrderTab';
+import FeedbackTab from '../components/FeedbackTab';
 
 const Index = () => {
 
@@ -144,7 +145,11 @@ const Index = () => {
                     <TabsContent value="orders" className="space-y-6">
                         <OrderTab orders={orders} onRefresh={handleRefresh} />
                     </TabsContent>
-                    
+
+                    <TabsContent value="feedback" className="space-y-6">
+                        <FeedbackTab feedbacks={feedbacks} onRefresh={handleRefresh} />
+                    </TabsContent>
+
                 </Tabs>
             </div>
         </div>

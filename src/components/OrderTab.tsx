@@ -4,12 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Clock, DollarSign, MapPin, Phone } from 'lucide-react';
 import { Badge } from './ui/badge';
 
-interface OrderDashboardProps {
+interface OrderTabProps {
     orders: any[];
     onRefresh: () => void;
 }
 
-const OrderTab = ({ orders, onRefresh }: OrderDashboardProps) => {
+const OrderTab = ({ orders, onRefresh }: OrderTabProps) => {
 
     const getStatusColor = (status: string) => {
         switch (status) {

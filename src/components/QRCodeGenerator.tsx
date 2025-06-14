@@ -52,7 +52,7 @@ const QRCodeGenerator = () => {
     const handleDownload = () => {
         if (canvasRef.current) {
             const link = document.createElement('a');
-            link.download = 'restaurant-menu-qr.png';
+            link.download = 'cafe-menu-qr.png';
             link.href = canvasRef.current.toDataURL();
             link.click();
             toast.success('QR code downloaded successfully!');
@@ -124,7 +124,7 @@ const QRCodeGenerator = () => {
 
                                 <Button
                                     onClick={handleOpenMenu}
-                                    className="w-full bg-orange-600 hover:bg-orange-700"
+                                    className="w-full bg-neutral-600 hover:bg-neutral-900"
                                 >
                                     <ExternalLink className="h-4 w-4 mr-2" />
                                     Preview Menu
