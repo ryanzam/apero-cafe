@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import HeaderMenu from '../components/HeaderMenu';
 import { menuItems } from '../utils/data';
 import { Card, CardContent } from '../components/ui/card';

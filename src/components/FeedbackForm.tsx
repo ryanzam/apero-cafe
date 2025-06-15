@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { translations } from '../utils/translations';
 import type { Language } from '../pages/Menu';
 import { toast } from 'sonner';
