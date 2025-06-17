@@ -1,16 +1,19 @@
-import { useEffect, useState } from 'react'
+import { use, useCallback, useEffect, useState } from 'react'
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { QrCode, ShoppingCart, Star, TrendingUp, Users } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
-import { getFeedbacks, getOrders } from '../utils/data';
+//import { getFeedbacks, getOrders } from '../utils/data';
 import QRCodeGenerator from '../components/QRCodeGenerator';
 import OrderTab from '../components/OrderTab';
 import FeedbackTab from '../components/FeedbackTab';
+import { supabase } from '../integrations/supabase/client';
+import { getOrders, getFeedbacks } from '../utils/supabase';
+import type { IOrder } from '../shared';
 
 const Index = () => {
 
-    const [orders, setOrders] = useState([]);
+    const [orders, setOrders] = useState<IOrder[]>([]);
     const [feedbacks, setFeedbacks] = useState([]);
     const [stats, setStats] = useState({
         totalOrders: 0,
@@ -19,37 +22,48 @@ const Index = () => {
         todayOrders: 0
     });
 
-    useEffect(() => {
-        const loadData = () => {
-            const allOrders = getOrders();
-            const allFeedbacks = getFeedbacks();
+    const loadData = useCallback(async () => {
+        const allOrders = await getOrders();
+        const allFeedbacks = await getFeedbacks();
 
-            setOrders(allOrders);
-            setFeedbacks(allFeedbacks);
+        setOrders(allOrders);
+        setFeedbacks(allFeedbacks);
 
-            // Calculate stats
-            const totalRevenue = allOrders.reduce((sum: number, order: any) => sum + order.total, 0);
-            const avgRating = allFeedbacks.length > 0
-                ? allFeedbacks.reduce((sum: number, fb: any) => sum + fb.rating, 0) / allFeedbacks.length
-                : 0;
-            const today = new Date().toDateString();
-            const todayOrders = allOrders.filter((order: any) =>
-                new Date(order.timestamp).toDateString() === today
-            ).length;
+        // Calculate stats
+        const totalRevenue = allOrders.reduce((sum: number, order: any) => sum + order.total, 0);
+        const avgRating = allFeedbacks.length > 0
+            ? allFeedbacks.reduce((sum: number, fb: any) => sum + fb.rating, 0) / allFeedbacks.length
+            : 0;
+        const today = new Date().toDateString();
+        const todayOrders = allOrders.filter((order: any) =>
+            new Date(order.timestamp).toDateString() === today
+        ).length;
 
-            setStats({
-                totalOrders: allOrders.length,
-                totalRevenue,
-                avgRating: Math.round(avgRating * 10) / 10,
-                todayOrders
-            });
-        };
-        loadData()
+        setStats({
+            totalOrders: allOrders.length,
+            totalRevenue,
+            avgRating: Math.round(avgRating * 10) / 10,
+            todayOrders
+        });
     }, [])
 
-    const handleRefresh = () => {
+    useEffect(() => {
+        loadData();
+        const channel = supabase.channel('schema-db-changes')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, (payload) => {
+                console.log('Order change received!', payload);
+                loadData();
+            })
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'feedbacks' }, (payload) => {
+                console.log('Feedback change received!', payload);
+                loadData();
+            })
+            .subscribe();
 
-    }
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [loadData]);
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50">
@@ -61,7 +75,7 @@ const Index = () => {
                             <h1 className="text-3xl font-bold text-gray-900">AperoCafe Dashboard</h1>
                             <p className="text-gray-600 mt-1">Manage your digital menu and orders</p>
                         </div>
-                        <Button onClick={handleRefresh} variant="outline">
+                        <Button onClick={loadData} variant="outline">
                             Refresh Data
                         </Button>
                     </div>
@@ -143,11 +157,11 @@ const Index = () => {
                     </TabsContent>
 
                     <TabsContent value="orders" className="space-y-6">
-                        <OrderTab orders={orders} onRefresh={handleRefresh} />
+                        <OrderTab orders={orders} onRefresh={loadData} />
                     </TabsContent>
 
                     <TabsContent value="feedback" className="space-y-6">
-                        <FeedbackTab feedbacks={feedbacks} onRefresh={handleRefresh} />
+                        <FeedbackTab feedbacks={feedbacks} onRefresh={loadData} />
                     </TabsContent>
 
                 </Tabs>

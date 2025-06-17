@@ -6,7 +6,8 @@ import { Star } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
-import { saveFeedback } from '../utils/data';
+import { saveFeedback } from '../utils/supabase';
+//import { saveFeedback } from '../utils/data';
 
 interface FeedbackFormProps {
     orderId: string | null;
@@ -16,13 +17,13 @@ interface FeedbackFormProps {
 }
 
 const FeedbackForm = ({ orderId, language, onComplete, onSkip }: FeedbackFormProps) => {
-    
+
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState('');
 
     const tlang = translations[language];
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (rating === 0) {
             toast.error(tlang.selectRating);
             return;
@@ -36,16 +37,18 @@ const FeedbackForm = ({ orderId, language, onComplete, onSkip }: FeedbackFormPro
             timestamp: new Date().toISOString()
         };
 
-        saveFeedback(feedback);
+        try {
+            await saveFeedback(feedback);
 
-        console.log(`Feedback received for Order ${orderId}:`);
-        console.log(`Rating: ${rating}/5 stars`);
-        console.log(`Comment: ${comment || 'No comment'}`);
+            console.log(`Feedback received for Order ${orderId}:`);
+            console.log(`Rating: ${rating}/5 stars`);
+            console.log(`Comment: ${comment || 'No comment'}`);
 
-        // Dispatch custom event to notify dashboard
-        window.dispatchEvent(new CustomEvent('dataUpdated'));
-
-        onComplete();
+            onComplete();
+        } catch (error) {
+            toast.error("Failed to submit feedback. Please try again.");
+            console.error(error);
+        }
     };
 
     return (
@@ -68,8 +71,8 @@ const FeedbackForm = ({ orderId, language, onComplete, onSkip }: FeedbackFormPro
                                 >
                                     <Star
                                         className={`h-8 w-8 ${star <= rating
-                                                ? 'text-yellow-400 fill-yellow-400'
-                                                : 'text-gray-300'
+                                            ? 'text-yellow-400 fill-yellow-400'
+                                            : 'text-gray-300'
                                             }`}
                                     />
                                 </button>

@@ -13,6 +13,8 @@ export interface ICustomer {
     phone: string;
 }
 
+export type OrderStatus = 'pending' | 'completed' | 'cancelled'
+
 export interface IOrder {
     id: string;
     items: IItem[];
@@ -20,6 +22,6 @@ export interface IOrder {
     customer: ICustomer;
     tableNumber: number;
     paymentMethod: string;
-    status: 'pending' | 'completed' | 'cancelled';
+    status: OrderStatus;
     timestamp: string;
 }

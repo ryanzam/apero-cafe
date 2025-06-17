@@ -80,7 +80,7 @@ const FeedbackTab = ({ feedbacks, onRefresh }: FeedbackTabProps) => {
                                         </div>
                                         <div className="flex items-center gap-1 text-sm text-gray-600">
                                             <Clock className="h-4 w-4" />
-                                            {formatTime(feedback.timestamp)}
+                                            {formatTime(feedback.created_at)}
                                         </div>
                                     </div>
 
@@ -91,7 +91,7 @@ const FeedbackTab = ({ feedbacks, onRefresh }: FeedbackTabProps) => {
                                     )}
 
                                     <div className="text-sm text-gray-500">
-                                        Order: {feedback.orderId}
+                                        Order: {feedback.feedback_id}
                                     </div>
                                 </div>
                             </CardContent>

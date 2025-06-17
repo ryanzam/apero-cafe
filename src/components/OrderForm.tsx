@@ -8,7 +8,9 @@ import { Input } from './ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { toast } from 'sonner';
 import { translations } from '../utils/translations';
-import { saveOrder } from '../utils/data';
+import { saveOrder } from '../utils/supabase';
+import type { IOrder } from '../shared';
+//import { saveOrder } from '../utils/data';
 
 interface OrderFormProps {
     cart: any[];
@@ -35,7 +37,7 @@ const OrderForm = ({ cart, totalPrice, language, onComplete, onCancel }: OrderFo
         }));
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (!customerInfo.name || !customerInfo.phone || !customerInfo.tableNumber || !paymentMethod) {
             toast.error(tlang.fillAllFields);
             return;
@@ -45,43 +47,49 @@ const OrderForm = ({ cart, totalPrice, language, onComplete, onCancel }: OrderFo
         const orderId = `ORD-${Date.now()}`;
 
         // Create order object
-        const order = {
+        const order: IOrder = {
             id: orderId,
             items: cart,
             total: totalPrice,
             customer: customerInfo,
+            tableNumber: parseInt(customerInfo.tableNumber),
             paymentMethod,
             status: 'pending',
             timestamp: new Date().toISOString()
         };
 
         // Save order
-        saveOrder(order);
+        try {
+            await saveOrder(order);
 
-        // Log to console for restaurant
-        console.log(`New Order Received!`);
-        console.log(`Order ID: ${orderId}`);
-        console.log(`Customer: ${customerInfo.name} (${customerInfo.phone})`);
-        console.log(`Table: ${customerInfo.tableNumber}`);
-        console.log(`Items:`, cart.map(item => `${item.quantity}x ${item.name[language]}`).join(', '));
-        console.log(`Total: NPR ${totalPrice}`);
-        console.log(`Payment Method: ${paymentMethod}`);
+            // Log to console for restaurant
+            console.log(`New Order Received!`);
+            console.log(`Order ID: ${orderId}`);
+            console.log(`Customer: ${customerInfo.name} (${customerInfo.phone})`);
+            console.log(`Table: ${customerInfo.tableNumber}`);
+            console.log(`Items:`, cart.map(item => `${item.quantity}x ${item.name[language]}`).join(', '));
+            console.log(`Total: NPR ${totalPrice}`);
+            console.log(`Payment Method: ${paymentMethod}`);
 
-        // Handle payment
-        if (paymentMethod === 'khalti') {
-            console.log(`Khalti payment of NPR ${totalPrice} initiated for Order #${orderId}`);
-            toast.success(tlang.khaltiInitiated);
-        } else if (paymentMethod === 'esewa') {
-            console.log(`eSewa payment of NPR ${totalPrice} initiated for Order #${orderId}`);
-            toast.success(tlang.esewaInitiated);
-        } else {
-            console.log(`Cash payment of NPR ${totalPrice} for Order #${orderId}`);
+            // Handle payment
+            if (paymentMethod === 'khalti') {
+                console.log(`Khalti payment of NPR ${totalPrice} initiated for Order #${orderId}`);
+                toast.success(tlang.khaltiInitiated);
+            } else if (paymentMethod === 'esewa') {
+                console.log(`eSewa payment of NPR ${totalPrice} initiated for Order #${orderId}`);
+                toast.success(tlang.esewaInitiated);
+            } else {
+                console.log(`Cash payment of NPR ${totalPrice} for Order #${orderId}`);
+            }
+
+            // Dispatch custom event to notify dashboard
+            window.dispatchEvent(new CustomEvent('dataUpdated'));
+
+            onComplete(orderId);
+        } catch (error) {
+            toast.error("Failed to place order. Please try again.");
+            console.error(error);
         }
-
-        // Dispatch custom event to notify dashboard
-        window.dispatchEvent(new CustomEvent('dataUpdated'));
-
-        onComplete(orderId);
     };
 
     return (
@@ -142,6 +150,13 @@ const OrderForm = ({ cart, totalPrice, language, onComplete, onCancel }: OrderFo
                                 onChange={(e) => handleInputChange('tableNumber', e.target.value)}
                                 placeholder={tlang.enterTable}
                             />
+                            <Select value={customerInfo.tableNumber} onValueChange={setPaymentMethod}>
+                                <SelectContent>
+                                    <SelectItem value="khalti">Khalti</SelectItem>
+                                    <SelectItem value="esewa">eSewa</SelectItem>
+                                    <SelectItem value="cash">{tlang.cash}</SelectItem>
+                                </SelectContent>
+                            </Select>
                         </div>
                     </div>
 

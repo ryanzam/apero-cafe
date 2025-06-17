@@ -45,7 +45,7 @@ const OrderTab = ({ orders, onRefresh }: OrderTabProps) => {
                         <Card key={order.id}>
                             <CardHeader>
                                 <div className="flex items-center justify-between">
-                                    <CardTitle className="text-lg">{order.id}</CardTitle>
+                                    <CardTitle className="text-lg">{order.order_id}</CardTitle>
                                     <Badge className={getStatusColor(order.status)}>
                                         {order.status}
                                     </Badge>
@@ -57,20 +57,20 @@ const OrderTab = ({ orders, onRefresh }: OrderTabProps) => {
                                     <div className="flex items-center gap-2">
                                         <Phone className="h-4 w-4 text-gray-500" />
                                         <div>
-                                            <p className="font-medium">{order.customer.name}</p>
-                                            <p className="text-sm text-gray-600">{order.customer.phone}</p>
+                                            <p className="font-medium">{order.customer_info.name}</p>
+                                            <p className="text-sm text-gray-600">{order.customer_info.phone}</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <MapPin className="h-4 w-4 text-gray-500" />
                                         <div>
-                                            <p className="font-medium">Table {order.customer.tableNumber}</p>
+                                            <p className="font-medium">Table {order.table_number}</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <Clock className="h-4 w-4 text-gray-500" />
                                         <div>
-                                            <p className="text-sm text-gray-600">{formatTime(order.timestamp)}</p>
+                                            <p className="text-sm text-gray-600">{formatTime(order.created_at)}</p>
                                         </div>
                                     </div>
                                 </div>
