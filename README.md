@@ -1,8 +1,10 @@
-# Digital Menu and Ordering System for Small Restaurants
+# Apero Cafe: Micro-SaaS for QR Digital Menus & Ordering – React + TypeScript + Tailwind + NodeJs for Small Cafes Worldwide.
 
 ![Vercel](https://vercelbadge.vercel.app/api/ryanzam/apero-cafe)
 
+[LiveDemo](https://apero-cafe.vercel.app/)
 
+<img width="150" height="150" alt="qrcode_apero-cafe vercel app" src="https://github.com/user-attachments/assets/ab063990-866c-479f-bfb5-036d15ff3cdb" />
 
 ## Features
 
