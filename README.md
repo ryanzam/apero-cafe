@@ -1,6 +1,6 @@
 # Apero Cafe: Micro-SaaS for QR Digital Menus & Ordering – React + TypeScript + Tailwind + NodeJs for Small Cafes Worldwide.
 
-![Vercel](https://vercelbadge.vercel.app/api/ryanzam/apero-cafe)
+[![Stars](https://img.shields.io/github/stars/ryanzam/r-motel?style=social)](https://github.com/ryanzam/r-motel) ![Vercel](https://vercelbadge.vercel.app/api/ryanzam/apero-cafe)
 
 [LiveDemo](https://apero-cafe.vercel.app/)
 
