@@ -14,18 +14,19 @@ export const getOrders = async () => {
 }
 
 export const saveOrder = async (order: IOrder) => {
-    const { id, items, customer, paymentMethod, status, tableNumber, total, timestamp } = order;
+    const { items, customer, paymentMethod, status, tableNumber, total } = order;
 
     const { data, error } = await sb.from('orders').insert([{
-        order_id: id,
-        customer_info: customer,
+        customer_name: customer.name,
+        customer_phone: customer.phone,
         items,
         total,
         payment_method: paymentMethod,
         status,
-        table_number: tableNumber,
-        created_at: timestamp ? new Date(timestamp).toISOString() : new Date().toISOString()
+        table_number: tableNumber
     }]).select()
+
+    console.log("Saving order to Supabase:", data)
 
     if (error) {
         console.error(`Error saving order: ${error.message}`);
@@ -37,7 +38,7 @@ export const saveOrder = async (order: IOrder) => {
 
 export const getFeedbacks = async () => {
     const { data, error } = await sb
-        .from('feedbacks')
+        .from('feedback')
         .select('*')
         .order('created_at', { ascending: false });
 
