@@ -16,12 +16,10 @@ export interface ICustomer {
 export type OrderStatus = 'pending' | 'completed' | 'cancelled'
 
 export interface IOrder {
-    id: string;
     items: IItem[];
     total: number;
     customer: ICustomer;
     tableNumber: number;
     paymentMethod: string;
     status: OrderStatus;
-    timestamp: string;
 }

@@ -63,8 +63,8 @@ const Menu = () => {
         return cart.reduce((total, item) => total + item.quantity, 0);
     };
 
-    const handleOrderComplete = (orderId: string) => {
-        setLastOrderId(orderId);
+    const handleOrderComplete = () => {
+        setLastOrderId(null);
         setCart([]);
         setShowOrderForm(false);
         setIsCartOpen(false);
