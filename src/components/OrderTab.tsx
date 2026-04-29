@@ -1,6 +1,6 @@
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Clock, DollarSign, MapPin, Phone } from 'lucide-react';
+import { Clock, DollarSign, MapPin, User2 } from 'lucide-react';
 import { Badge } from './ui/badge';
 
 interface OrderTabProps {
@@ -55,10 +55,10 @@ const OrderTab = ({ orders, onRefresh }: OrderTabProps) => {
                                 {/* Customer Info */}
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div className="flex items-center gap-2">
-                                        <Phone className="h-4 w-4 text-gray-500" />
+                                        <User2 className="h-4 w-4 text-gray-500" />
                                         <div>
-                                            <p className="font-medium">{order.customer_info.name}</p>
-                                            <p className="text-sm text-gray-600">{order.customer_info.phone}</p>
+                                            <p className="font-medium">{order.customer_name}</p>
+                                            <p className="text-sm text-gray-600">{order.customer_phone}</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2">
@@ -92,7 +92,7 @@ const OrderTab = ({ orders, onRefresh }: OrderTabProps) => {
                                 <div className="flex items-center justify-between pt-2 border-t">
                                     <div className="flex items-center gap-2">
                                         <DollarSign className="h-4 w-4 text-gray-500" />
-                                        <span className="text-sm">{order.paymentMethod}</span>
+                                        <div className="text-sm">Payment Method: <span className='uppercase font-bold'>{order.payment_method}</span></div>
                                     </div>
                                     <div className="font-bold">
                                         Total: NPR {order.total}
