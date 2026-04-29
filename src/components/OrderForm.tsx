@@ -16,7 +16,7 @@ interface OrderFormProps {
     cart: any[];
     totalPrice: number;
     language: Language;
-    onComplete: (orderId: string) => void;
+    onComplete: () => void;
     onCancel: () => void;
 }
 
@@ -42,29 +42,24 @@ const OrderForm = ({ cart, totalPrice, language, onComplete, onCancel }: OrderFo
             toast.error(tlang.fillAllFields);
             return;
         }
-
-        // Generate order ID
-        const orderId = `ORD-${Date.now()}`;
-
         // Create order object
         const order: IOrder = {
-            id: orderId,
             items: cart,
             total: totalPrice,
             customer: customerInfo,
             tableNumber: parseInt(customerInfo.tableNumber),
             paymentMethod,
             status: 'pending',
-            timestamp: new Date().toISOString()
         };
 
         // Save order
         try {
-            await saveOrder(order);
+            const orderData = await saveOrder(order);
+
+            console.log("Order saved successfully:", orderData);
 
             // Log to console for restaurant
             console.log(`New Order Received!`);
-            console.log(`Order ID: ${orderId}`);
             console.log(`Customer: ${customerInfo.name} (${customerInfo.phone})`);
             console.log(`Table: ${customerInfo.tableNumber}`);
             console.log(`Items:`, cart.map(item => `${item.quantity}x ${item.name[language]}`).join(', '));
@@ -73,19 +68,17 @@ const OrderForm = ({ cart, totalPrice, language, onComplete, onCancel }: OrderFo
 
             // Handle payment
             if (paymentMethod === 'khalti') {
-                console.log(`Khalti payment of NPR ${totalPrice} initiated for Order #${orderId}`);
                 toast.success(tlang.khaltiInitiated);
             } else if (paymentMethod === 'esewa') {
-                console.log(`eSewa payment of NPR ${totalPrice} initiated for Order #${orderId}`);
                 toast.success(tlang.esewaInitiated);
             } else {
-                console.log(`Cash payment of NPR ${totalPrice} for Order #${orderId}`);
+                console.log(`Cash payment of NPR ${totalPrice} for Order #${order.customer.name} at Table ${order.tableNumber}`);
             }
 
             // Dispatch custom event to notify dashboard
             window.dispatchEvent(new CustomEvent('dataUpdated'));
 
-            onComplete(orderId);
+            onComplete();
         } catch (error) {
             toast.error("Failed to place order. Please try again.");
             console.error(error);
