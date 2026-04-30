@@ -7,16 +7,16 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
 import { saveFeedback } from '../utils/supabase';
-//import { saveFeedback } from '../utils/data';
 
 interface FeedbackFormProps {
     orderId: string | null;
+    customer_name: string | null;
     language: Language;
     onComplete: () => void;
     onSkip: () => void;
 }
 
-const FeedbackForm = ({ orderId, language, onComplete, onSkip }: FeedbackFormProps) => {
+const FeedbackForm = ({ orderId, customer_name, language, onComplete, onSkip }: FeedbackFormProps) => {
 
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState('');
@@ -30,11 +30,10 @@ const FeedbackForm = ({ orderId, language, onComplete, onSkip }: FeedbackFormPro
         }
 
         const feedback = {
-            id: `FB-${Date.now()}`,
             orderId,
             rating,
             comment,
-            timestamp: new Date().toISOString()
+            customer_name: customer_name || 'Anonymous'
         };
 
         try {
