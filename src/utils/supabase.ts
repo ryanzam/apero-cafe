@@ -51,15 +51,14 @@ export const getFeedbacks = async () => {
 };
 
 export const saveFeedback = async (feedback: any) => {
-    const { id, orderId, rating, comment, timestamp } = feedback;
+    const { customer_name, orderId, rating, comment } = feedback;
     const { data, error } = await sb
-        .from('feedbacks')
+        .from('feedback')
         .insert([{
-            feedback_id: id,
+            customer_name,
             order_id: orderId,
             rating,
             comment,
-            created_at: timestamp
         }]).select();
 
     if (error) {
