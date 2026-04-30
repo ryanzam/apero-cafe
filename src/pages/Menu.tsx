@@ -28,6 +28,7 @@ const Menu = () => {
     const [showOrderForm, setShowOrderForm] = useState(false);
     const [showFeedback, setShowFeedback] = useState(false);
     const [lastOrderId, setLastOrderId] = useState<string | null>(null);
+    const [customerName, setCustomerName] = useState<string | null>(null);
 
     const tlang = translations[language]
 
@@ -63,8 +64,9 @@ const Menu = () => {
         return cart.reduce((total, item) => total + item.quantity, 0);
     };
 
-    const handleOrderComplete = () => {
-        setLastOrderId(null);
+    const handleOrderComplete = (orderId: string, customer_name: string) => {
+        setLastOrderId(orderId);
+        setCustomerName(customer_name);
         setCart([]);
         setShowOrderForm(false);
         setIsCartOpen(false);
@@ -197,6 +199,7 @@ const Menu = () => {
             {showFeedback && (
                 <FeedbackForm
                     orderId={lastOrderId}
+                    customer_name={customerName}
                     language={language}
                     onComplete={() => handleFeedbackComplete()}
                     onSkip={handleFeedbackComplete}
