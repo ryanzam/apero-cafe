@@ -16,7 +16,7 @@ interface OrderFormProps {
     cart: any[];
     totalPrice: number;
     language: Language;
-    onComplete: () => void;
+    onComplete: (orderId: string, customer_name: string) => void;
     onCancel: () => void;
 }
 
@@ -56,17 +56,6 @@ const OrderForm = ({ cart, totalPrice, language, onComplete, onCancel }: OrderFo
         try {
             const orderData = await saveOrder(order);
 
-            console.log("Order saved successfully:", orderData);
-
-            // Log to console for restaurant
-            console.log(`New Order Received!`);
-            console.log(`Customer: ${customerInfo.name} (${customerInfo.phone})`);
-            console.log(`Table: ${customerInfo.tableNumber}`);
-            console.log(`Items:`, cart.map(item => `${item.quantity}x ${item.name[language]}`).join(', '));
-            console.log(`Total: NPR ${totalPrice}`);
-            console.log(`Payment Method: ${paymentMethod}`);
-
-            // Handle payment
             if (paymentMethod === 'khalti') {
                 toast.success(tlang.khaltiInitiated);
             } else if (paymentMethod === 'esewa') {
@@ -78,7 +67,7 @@ const OrderForm = ({ cart, totalPrice, language, onComplete, onCancel }: OrderFo
             // Dispatch custom event to notify dashboard
             window.dispatchEvent(new CustomEvent('dataUpdated'));
 
-            onComplete();
+            onComplete(orderData[0].id, customerInfo.name);
         } catch (error) {
             toast.error("Failed to place order. Please try again.");
             console.error(error);
