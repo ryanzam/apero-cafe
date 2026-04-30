@@ -1,5 +1,5 @@
 import { Button } from './ui/button'
-import { Clock, Star } from 'lucide-react'
+import { Clock, Receipt, Star, User2Icon } from 'lucide-react'
 import { Card, CardContent } from './ui/card'
 
 interface FeedbackTabProps {
@@ -20,8 +20,8 @@ const FeedbackTab = ({ feedbacks, onRefresh }: FeedbackTabProps) => {
                     <Star
                         key={star}
                         className={`h-4 w-4 ${star <= rating
-                                ? 'text-yellow-400 fill-yellow-400'
-                                : 'text-gray-300'
+                            ? 'text-yellow-400 fill-yellow-400'
+                            : 'text-gray-300'
                             }`}
                     />
                 ))}
@@ -74,6 +74,14 @@ const FeedbackTab = ({ feedbacks, onRefresh }: FeedbackTabProps) => {
                             <CardContent className="p-6">
                                 <div className="space-y-3">
                                     <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-1 text-sm text-gray-600">
+                                            <Receipt className="h-4 w-4" />
+                                            {feedback.order_id}
+                                        </div>
+                                        <div className="flex items-center gap-1 text-sm text-gray-600">
+                                            <User2Icon className="h-4 w-4" />
+                                            {feedback.customer_name}
+                                        </div>
                                         <div className="flex items-center gap-2">
                                             {renderStars(feedback.rating)}
                                             <span className="font-medium">{feedback.rating}/5</span>
@@ -82,6 +90,7 @@ const FeedbackTab = ({ feedbacks, onRefresh }: FeedbackTabProps) => {
                                             <Clock className="h-4 w-4" />
                                             {formatTime(feedback.created_at)}
                                         </div>
+
                                     </div>
 
                                     {feedback.comment && (
@@ -89,10 +98,6 @@ const FeedbackTab = ({ feedbacks, onRefresh }: FeedbackTabProps) => {
                                             <p className="text-gray-700">{feedback.comment}</p>
                                         </div>
                                     )}
-
-                                    <div className="text-sm text-gray-500">
-                                        Order: {feedback.feedback_id}
-                                    </div>
                                 </div>
                             </CardContent>
                         </Card>

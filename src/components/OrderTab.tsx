@@ -1,6 +1,6 @@
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Clock, DollarSign, MapPin, User2 } from 'lucide-react';
+import { Clock, DollarSign, MapPin, PhoneCallIcon, User2 } from 'lucide-react';
 import { Badge } from './ui/badge';
 
 interface OrderTabProps {
@@ -53,11 +53,16 @@ const OrderTab = ({ orders, onRefresh }: OrderTabProps) => {
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 {/* Customer Info */}
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                     <div className="flex items-center gap-2">
                                         <User2 className="h-4 w-4 text-gray-500" />
                                         <div>
                                             <p className="font-medium">{order.customer_name}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <PhoneCallIcon className="h-4 w-4 text-gray-500" />
+                                        <div>
                                             <p className="text-sm text-gray-600">{order.customer_phone}</p>
                                         </div>
                                     </div>
