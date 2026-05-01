@@ -1,6 +1,6 @@
 import { supabase } from "../integrations/supabase/client";
 import { toast } from "sonner";
-import type { IOrder } from "../shared";
+import type { IOrder, OrderStatus } from "../shared";
 
 const sb = supabase as any
 
@@ -26,8 +26,6 @@ export const saveOrder = async (order: IOrder) => {
         table_number: tableNumber
     }]).select()
 
-    console.log("Saving order to Supabase:", data)
-
     if (error) {
         console.error(`Error saving order: ${error.message}`);
         throw error;
@@ -35,6 +33,18 @@ export const saveOrder = async (order: IOrder) => {
 
     return data
 }
+
+export const updateStatusOrder = async (orderId: string, status: OrderStatus) => {
+    const { data, error } = await sb.from('orders')
+        .update({ status }).eq('id', orderId).select();
+
+    if (error) {
+        console.error(`Error updating order status: ${error.message}`);
+        throw error;
+    }
+
+    return data;
+};
 
 export const getFeedbacks = async () => {
     const { data, error } = await sb
@@ -67,3 +77,4 @@ export const saveFeedback = async (feedback: any) => {
     }
     return data;
 };
+
