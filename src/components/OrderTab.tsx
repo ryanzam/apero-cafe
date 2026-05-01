@@ -1,7 +1,10 @@
 import { Button } from './ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Card, CardContent, CardHeader } from './ui/card';
 import { Clock, DollarSign, MapPin, PhoneCallIcon, User2 } from 'lucide-react';
 import { Badge } from './ui/badge';
+import type { OrderStatus } from '../shared';
+import { updateStatusOrder } from '../utils/supabase';
+import { toast } from 'sonner';
 
 interface OrderTabProps {
     orders: any[];
@@ -10,12 +13,22 @@ interface OrderTabProps {
 
 const OrderTab = ({ orders, onRefresh }: OrderTabProps) => {
 
-    const getStatusColor = (status: string) => {
+    const handleUpdateStatus = async (orderId: string, status: OrderStatus) => {
+        try {
+            await updateStatusOrder(orderId, status);
+            toast.success(`Order status updated to ${status}`);
+            onRefresh();
+        } catch (error) {
+            toast.error("Failed to update order status. Please try again.");
+            console.error(error);
+        }
+    };
+
+    const getStatusColor = (status: OrderStatus) => {
         switch (status) {
             case 'pending': return 'bg-yellow-100 text-yellow-800';
-            case 'preparing': return 'bg-blue-100 text-blue-800';
-            case 'ready': return 'bg-green-100 text-green-800';
-            case 'completed': return 'bg-gray-100 text-gray-800';
+            case 'completed': return 'bg-green-100 text-green-800';
+            case 'archive': return 'bg-gray-100 text-gray-800';
             default: return 'bg-gray-100 text-gray-800';
         }
     };
@@ -45,10 +58,15 @@ const OrderTab = ({ orders, onRefresh }: OrderTabProps) => {
                         <Card key={order.id}>
                             <CardHeader>
                                 <div className="flex items-center justify-between">
-                                    <CardTitle className="text-lg">{order.order_id}</CardTitle>
                                     <Badge className={getStatusColor(order.status)}>
                                         {order.status}
                                     </Badge>
+
+                                    <select value={order.status} onChange={(e) => handleUpdateStatus(order.id, e.target.value as OrderStatus)}>
+                                        <option value="pending">Pending</option>
+                                        <option value="completed">Completed</option>
+                                        <option value="archive">Archive</option>
+                                    </select>
                                 </div>
                             </CardHeader>
                             <CardContent className="space-y-4">
