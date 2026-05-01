@@ -10,8 +10,6 @@ import { toast } from 'sonner';
 import { translations } from '../utils/translations';
 import { saveOrder } from '../utils/supabase';
 import type { IOrder } from '../shared';
-//import { saveOrder } from '../utils/data';
-
 interface OrderFormProps {
     cart: any[];
     totalPrice: number;
@@ -64,7 +62,6 @@ const OrderForm = ({ cart, totalPrice, language, onComplete, onCancel }: OrderFo
                 console.log(`Cash payment of NPR ${totalPrice} for Order #${order.customer.name} at Table ${order.tableNumber}`);
             }
 
-            // Dispatch custom event to notify dashboard
             window.dispatchEvent(new CustomEvent('dataUpdated'));
 
             onComplete(orderData[0].id, customerInfo.name);
