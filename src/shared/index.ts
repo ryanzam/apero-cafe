@@ -13,9 +13,10 @@ export interface ICustomer {
     phone: string;
 }
 
-export type OrderStatus = 'pending' | 'completed' | 'cancelled'
+export type OrderStatus = 'pending' | 'completed' | 'archive'
 
 export interface IOrder {
+    id?: string;
     items: IItem[];
     total: number;
     customer: ICustomer;
