@@ -3,7 +3,6 @@ import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { QrCode, ShoppingCart, Star, TrendingUp, Users } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
-//import { getFeedbacks, getOrders } from '../utils/data';
 import QRCodeGenerator from '../components/QRCodeGenerator';
 import OrderTab from '../components/OrderTab';
 import FeedbackTab from '../components/FeedbackTab';
@@ -23,39 +22,39 @@ const Index = () => {
     });
 
     const loadData = useCallback(async () => {
-        const allOrders = await getOrders();
-        const allFeedbacks = await getFeedbacks();
+        try {
+            const allOrders = await getOrders();
+            const allFeedbacks = await getFeedbacks();
 
-        setOrders(allOrders);
-        setFeedbacks(allFeedbacks);
+            setOrders(allOrders);
+            setFeedbacks(allFeedbacks);
 
-        // Calculate stats
-        const totalRevenue = allOrders.reduce((sum: number, order: any) => sum + order.total, 0);
-        const avgRating = allFeedbacks.length > 0
-            ? allFeedbacks.reduce((sum: number, fb: any) => sum + fb.rating, 0) / allFeedbacks.length
-            : 0;
-        const today = new Date().toDateString();
-        const todayOrders = allOrders.filter((order: any) =>
-            new Date(order.timestamp).toDateString() === today
-        ).length;
+            // Calculate stats
+            const totalRevenue = allOrders.reduce((sum: number, order: any) => sum + order.total, 0);
+            const avgRating = allFeedbacks.length > 0
+                ? allFeedbacks.reduce((sum: number, fb: any) => sum + fb.rating, 0) / allFeedbacks.length
+                : 0;
+            const today = new Date().toDateString();
+            const todayOrders = allOrders.filter((order: any) =>
+                new Date(order.timestamp).toDateString() === today
+            ).length;
 
-        setStats({
-            totalOrders: allOrders.length,
-            totalRevenue,
-            avgRating: Math.round(avgRating * 10) / 10,
-            todayOrders
-        });
+            setStats({
+                totalOrders: allOrders.length,
+                totalRevenue,
+                avgRating: Math.round(avgRating * 10) / 10,
+                todayOrders
+            });
+        } catch (error) {
+            console.error('Error loading data:', error);
+        }
     }, [])
 
     useEffect(() => {
         loadData();
-        const channel = supabase.channel('schema-db-changes')
+        const channel = supabase.channel('supabase_realtime')
             .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, (payload) => {
                 console.log('Order change received!', payload);
-                loadData();
-            })
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'feedbacks' }, (payload) => {
-                console.log('Feedback change received!', payload);
                 loadData();
             })
             .subscribe();
@@ -63,7 +62,7 @@ const Index = () => {
         return () => {
             supabase.removeChannel(channel);
         };
-    }, [loadData]);
+    }, [orders.length]);
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50">
